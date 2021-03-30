@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "noEmit": true,
+        "target": "es5",
+        "lib": [
+            "es2019"
+        ],
+        "resolveJsonModule": true
+    },
+    "include": [
+        "src/**/*.js"
+    ]
+}
