@@ -4,9 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const xmlJs = require('xml-js');
 const chalk = require('chalk');
-const { JSDOM } = require('jsdom');
 const { parse, unparse } = require('papaparse');
-const { tap, uniqBy, httpRequest, writeOutput, generateThirdPartyNoticeMarkdown, licenseMappings } = require('../utils');
+const { tap, httpRequest, writeOutput, generateThirdPartyNoticeMarkdown, licenseMappings } = require('../utils');
 const { papaConfig, projectName, basePath } = require('../configuration/config');
 
 exports.execute = async () => {
@@ -42,9 +41,7 @@ function initBom() {
     .map(dep => ({key: `${dep.groupId}$$$${dep.artifactId}$$$${dep.version}`, dep}))
     .reduce((acc, {key, dep}) => (acc[key] = dep, acc), {});
   return Object.values(tmp)
-    .sort((a, b) => a.artifactId.localeCompare(b.artifactId))
-    // .filter(e => e.groupId === 'org.apache.axis' && e.artifactId === 'axis')
-    ;
+    .sort((a, b) => a.artifactId.localeCompare(b.artifactId));
 }
 
 function delta(bom) {
@@ -71,52 +68,44 @@ async function populateVersionData(bom) {
     // E.g.: https://mvnrepository.com/artifact/javax.activation/javax.activation-api/1.2.0
     const index = (++idx + '').padStart(Math.floor(Math.log10(total)) + 1, ' ');
     console.log(`(${index}/${total}) Elaborating license for GROUP ID: "${chalk.redBright(dep.groupId)}", ARTIFACT ID: "${chalk.yellowBright(dep.artifactId)}", VERSION: "${chalk.greenBright(dep.version)}"`);
-    const url = `https://mvnrepository.com/artifact/${dep.groupId}/${dep.artifactId}/${dep.version}`;
-    let license = await readLicense(url);
-    if(!license.license || !license.license.length) {
-      const url = `https://mvnrepository.com/artifact/${dep.groupId}/${dep.artifactId}`;
-      license = await readLicense(url);
-    }
-    dep.license = license.license || [];
-    dep.licenseOther = license.other || [];
-
-    if(!dep.license) {
-      console.log(`WARNING! License not found!`);
-    }
+    const license = await readLicense(dep);
+    dep.license = license || [];
   }
   return bom;
 }
 
-async function readLicense(url) {
-  let content = await httpRequest(url);
-  const { document } = (new JSDOM(content)).window;
-  const licenses = Array.from(document.querySelectorAll('table.grid'))
-    .flatMap(el => Array.from(el.querySelectorAll('tr')))
-    .filter(el => el.querySelector('th')?.innerHTML === 'License')
-    .flatMap(el => Array.from(el.querySelectorAll('td > span') || []))
-    .map(el => el.innerHTML);
-
-  const others = Array.from(document.querySelectorAll('table.grid'))
-    .filter(el => el.querySelector('th')?.innerHTML === 'License')
-    .flatMap(el => Array.from(el.querySelectorAll('tbody td:first-child')))
-    .map(el => el.innerHTML.replace(/\n/g, ' '));
-
-  let returnedLicenses = [...others, ...licenses]
-    .flatMap(l => ({licenseText: l, license: l.toUpperCase()}))
+async function readLicense(dep) {
+  const url = `https://repo.maven.apache.org/maven2/${dep.groupId.replace(/\./g, '/')}/${dep.artifactId}/${dep.version}/${dep.artifactId}-${dep.version}.pom`;
+  const content = await httpRequest(url);
+  let xml;
+  try {
+    xml = xmlJs.xml2js(content, { compact: true, trim: true, nativeType: false });
+  } catch(e) {
+    console.log(chalk.redBright(`Error in XML parsing. Please check https://mvnrepository.com/artifact/${dep.groupId}/${dep.artifactId}/${dep.version}`));
+    return [];
+  }
+  let licenseList = xml['project'].licenses?.license;
+  if(!Array.isArray(licenseList)) {
+    licenseList = [ licenseList ];
+  }
+  const licenses = licenseList
+    .filter(Boolean)
+    .flatMap(l => ({licenseText: l.name._text, license: l.name._text.toUpperCase()}))
     .map(({licenseText, license}) => {
       const tmp = {licenseText, license: licenseMappings.reduce((acc, [key,el]) => (el.substitutions.indexOf(license) !== -1 && acc.push(key), acc), [])};
       if(!tmp.license.length) {
-        console.log(chalk.redBright(`WARNING!!! License not found! ${licenseText}`));
+        tmp.license.push(license);
       }
       return tmp;
     })
     .filter(el => el.license)
     .flatMap(el => el.license);
 
-  return {
-    license: uniqBy(returnedLicenses, el => el),
-    other: uniqBy(others, el => el),
-  };
+  if(licenses.length) {
+    return licenses;
+  }
+  console.log(chalk.redBright(`License data not found. Please check https://mvnrepository.com/artifact/${dep.groupId}/${dep.artifactId}/${dep.version}`));
+  return [];
 }
 
 function generateOutput(bom) {

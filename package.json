@@ -9,7 +9,12 @@
     "run": "node src/run.js",
     "put": "node src/put.js"
   },
-  "keywords": ["BOM", "THIRD_PARTY_NOTE", "maven", "node"],
+  "keywords": [
+    "BOM",
+    "THIRD_PARTY_NOTE",
+    "maven",
+    "node"
+  ],
   "author": "Alessandro Marchino",
   "license": "MIT",
   "dependencies": {

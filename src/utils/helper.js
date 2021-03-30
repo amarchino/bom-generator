@@ -6,7 +6,8 @@ const JSON5 = require('json5');
 const fs = require('fs');
 const https = require('https');
 const http = require('http');
-const { projectName, eol } = require('../configuration/config');
+const { projectName } = require('../configuration/config');
+const eol = '\n';
 
 exports.licenseMappings = Object.entries(require('./license-mappings.json'));
 

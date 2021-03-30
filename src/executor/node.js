@@ -112,18 +112,19 @@ function parseMetadata(metadata) {
 
 function parseLicense(license) {
   if (typeof license !== 'string') {
-    return license?.type || '';
+    return parseLicense(license?.type || '');
   }
   return (license || '')
     .replace(/^\(?(.*?)\)?$/, '$1')
     .split(/ (?:AND|OR) /)
-    .flatMap(lic => {
-      const tmp = licenseMappings.reduce((acc, [key, el]) => (el.substitutions.indexOf(lic.toUpperCase()) !== -1 && acc.push(key), acc), []);
-      if(!tmp || !tmp.length) {
-        console.log(`Missing license ${lic}`)
-      }
-      return tmp;
-    });
+    .flatMap(lic => parseLicenseArray(lic));
+}
+function parseLicenseArray(lic) {
+  const tmp = licenseMappings.reduce((acc, [key, el]) => (el.substitutions.indexOf(lic.toUpperCase()) !== -1 && acc.push(key), acc), []);
+  if(!tmp || !tmp.length) {
+    console.log(`  Missing license "${chalk.redBright(lic)}". Using read value`);
+  }
+  return tmp || lic;
 }
 
 function generateOutput(bom) {
