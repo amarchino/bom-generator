@@ -3,12 +3,12 @@ const init = Date.now();
 const path = require('path');
 const fs = require('fs');
 const chalk = require('chalk');
-const { parse, unparse } = require('papaparse');
-const { papaConfig, basePath, projectName } = require('../configuration/config');
+const { parse } = require('papaparse');
+const { papaConfig, basePath } = require('../configuration/config');
 
-exports.check = async () => {
+exports.check = async (projectName) => {
   try {
-    const bom = readBom();
+    const bom = readBom(projectName);
     const csv = parse(bom, papaConfig).data;
     let hasRowsWithoutLicense = true;
     for(const row of csv) {
@@ -28,6 +28,6 @@ exports.check = async () => {
   }
 };
 
-function readBom() {
+function readBom(projectName) {
   return fs.readFileSync(path.join(basePath, 'output', 'csv', `BOM-${projectName}.csv`), {encoding: 'utf-8'});
 }

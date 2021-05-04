@@ -6,30 +6,55 @@ const xmlJs = require('xml-js');
 const chalk = require('chalk');
 const { parse, unparse } = require('papaparse');
 const { tap, httpRequest, writeOutput, generateThirdPartyNoticeMarkdown, licenseMappings } = require('../utils');
-const { papaConfig, projectName, basePath } = require('../configuration/config');
+const { papaConfig, basePath } = require('../configuration/config');
 
-exports.execute = async () => {
+exports.execute = async (projectName) => {
   try {
-    let bom = initBom();
-    bom = delta(bom);
+    let bom = initBom(projectName);
+    bom = delta(projectName, bom);
     bom = await populateVersionData(bom);
     const output = generateOutput(bom);
-    writeOutput(basePath, output);
+    writeOutput(basePath, projectName, output);
   } catch(e) {
     console.log(e);
   } finally {
-    console.log(chalk.greenBright(`Elapsed time: ${Date.now() - init}ms`))
+    console.log(chalk.greenBright(`Elapsed time: ${Date.now() - init} ms`))
   }
 };
 
-function initBom() {
+function initBom(projectName) {
   const folder = path.join(basePath, 'input', 'maven', projectName);
   if(!fs.existsSync(folder)) {
     return [];
   }
-  const projectGroupIds = {};
+  const files = fs.readdirSync(folder);
+  const tmp = parseBomPomTxt(folder, files)
+    || parseBomPomXml(folder, files);
 
-  const tmp = fs.readdirSync(folder)
+  return Object.values(tmp)
+    .sort((a, b) => a.artifactId.localeCompare(b.artifactId));
+}
+
+function parseBomPomTxt(folder, files) {
+  const projectGroupIds = {};
+  const txtFiles = files
+    .filter(fn => path.extname(fn) === '.txt');
+  if(!txtFiles.length) {
+    return false;
+  }
+  return txtFiles
+  .map(fn => fs.readFileSync(path.join(folder, fn), {encoding: 'utf-8'}))
+  .flatMap(content => content.split(/\r?\n/))
+  .filter(line => line && line !== 'The following files have been resolved:' && line !== '   none')
+  .map(line => line.trim().split(':'))
+  .reduce((acc, [groupId, artifactId, , version, data]) => {
+    acc[`${groupId}$$$${artifactId}$$$${version}`] = {groupId, artifactId, version, elaborated: false};
+    return acc;
+  }, {});
+}
+function parseBomPomXml(folder, files) {
+  const projectGroupIds = {};
+  return files
     .filter(fn => path.extname(fn) === '.xml')
     .map(fn => fs.readFileSync(path.join(folder, fn), {encoding: 'utf-8'}))
     .map(content => xmlJs.xml2js(content, { compact: true, trim: true, nativeType: false}))
@@ -40,11 +65,9 @@ function initBom() {
     .filter(dep => !projectGroupIds[dep.groupId])
     .map(dep => ({key: `${dep.groupId}$$$${dep.artifactId}$$$${dep.version}`, dep}))
     .reduce((acc, {key, dep}) => (acc[key] = dep, acc), {});
-  return Object.values(tmp)
-    .sort((a, b) => a.artifactId.localeCompare(b.artifactId));
 }
 
-function delta(bom) {
+function delta(projectName, bom) {
   const originalBomPath = path.join(basePath, 'output', 'csv', `BOM-${projectName}.csv`);
   if (!fs.existsSync(originalBomPath)) {
     return bom;

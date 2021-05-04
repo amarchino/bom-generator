@@ -6,7 +6,6 @@ const JSON5 = require('json5');
 const fs = require('fs');
 const https = require('https');
 const http = require('http');
-const { projectName } = require('../configuration/config');
 const eol = '\n';
 
 exports.licenseMappings = Object.entries(require('./license-mappings.json'));
@@ -42,9 +41,9 @@ exports.httpRequest = async url => new Promise((resolve, reject) => {
   http.get(url, res => httpCallback(res, resolve, reject));
 });
 
-exports.writeOutput = (basePath, {csv, markdown}) => {
-  writeCsv(basePath, csv);
-  writeMarkdown(basePath, markdown);
+exports.writeOutput = (basePath, projectName, {csv, markdown}) => {
+  writeCsv(basePath, projectName, csv);
+  writeMarkdown(basePath, projectName, markdown);
 };
 
 exports.createFolderIfNotExists = (baseFolder, ...subpaths) => subpaths.reduce((acc, fld) => {
@@ -69,11 +68,11 @@ exports.generateThirdPartyNoticeMarkdown = (bom, nameField, versionField) => {
   }, `This file is based on or incorporates material from the projects listed below${eol}(collectively, "Third Party Code").${eol}${eol}CSI-Piemonte is not the original author of the Third Party Code.${eol}The original copyright notice and the license, under which CSI-Piemonte received such Third Party Code,${eol}are set forth below. You can find the original source code at the link set hereafter.${eol}Please refer to the accompanying credits file for additional notices.`) + eol;
 };
 
-function writeCsv(basePath, csv) {
+function writeCsv(basePath, projectName, csv) {
   exports.createFolderIfNotExists(basePath, 'output', 'csv');
   fs.writeFileSync(path.join(basePath, 'output', 'csv', `BOM-${projectName}.csv`), csv, {encoding: 'utf-8'});
 }
-function writeMarkdown(basePath, md) {
+function writeMarkdown(basePath, projectName, md) {
   exports.createFolderIfNotExists(basePath, 'output', 'markdown');
   fs.writeFileSync(path.join(basePath, 'output', 'markdown', `THIRD_PARTY_NOTE-${projectName}.md`), md, {encoding: 'utf-8'});
 }

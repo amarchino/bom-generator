@@ -2,17 +2,17 @@
 const path = require('path');
 const fs = require('fs');
 const chalk = require('chalk');
-const { basePath, projectPath, projectName } = require('../configuration/config');
+const { basePath } = require('../configuration/config');
 const { createFolderIfNotExists } = require('../utils');
 
-exports.grab = async () => {
+exports.grab = async (projectName, projectPath) => {
   createFolderIfNotExists(basePath, 'input', 'maven', projectName);
-  cleanOutput();
-  readDir(projectPath, (folder, f) => f.indexOf('.bom-pom.xml') !== -1
+  cleanOutput(projectName);
+  readDir(projectPath, (folder, f) => (f.indexOf('.bom-pom.txt') !== -1 || f.indexOf('.bom-pom.xml') !== -1)
     && (fs.copyFileSync(path.join(folder, f), path.join(basePath, 'input', 'maven', projectName, f)), console.log(chalk.greenBright(`Copied file ${f}`))));
 };
 
-function cleanOutput() {
+function cleanOutput(projectName) {
   const folder = path.join(basePath, 'input', 'maven', projectName);
   const contents = fs.readdirSync(folder);
   for(const content of contents) {

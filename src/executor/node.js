@@ -5,37 +5,35 @@ const fs = require('fs');
 const chalk = require('chalk');
 const { parse, unparse } = require('papaparse');
 const { uniqBy, httpRequest, writeOutput, generateThirdPartyNoticeMarkdown, licenseMappings } = require('../utils');
-const { papaConfig, basePath, projectName } = require('../configuration/config');
+const { papaConfig, basePath } = require('../configuration/config');
 
-exports.execute = async () => {
+exports.execute = async (projectName) => {
   try {
-    let bom = initBom();
-    bom = delta(bom);
+    let bom = initBom(projectName);
+    bom = delta(projectName, bom);
     bom = await populateVersionData(bom);
     const output = generateOutput(bom);
-    writeOutput(basePath, output);
+    writeOutput(basePath, projectName, output);
   } catch(e) {
     console.log(e);
   } finally {
-    console.log(chalk.greenBright(`Elapsed time: ${Date.now() - init}ms`))
+    console.log(chalk.greenBright(`Elapsed time: ${Date.now() - init} ms`))
   }
 };
 
 /**
  * @returns {{name: string, type: 'dev' | 'prod', version: string, license: string, dependencies: string}[]}
  */
-function initBom() {
+function initBom(projectName) {
   const folder = path.join(basePath, 'input', 'node', projectName);
   if(!fs.existsSync(folder)) {
     return [];
   }
-
   const packageLockDependencies = fs.readdirSync(folder)
     .filter(fn => fn.indexOf('-lock') !== -1)
     .map(fn => fs.readFileSync(path.join(folder, fn), {encoding: 'utf-8'}))
     .map(content => JSON.parse(content))
-    .filter(obj => obj.dependencies)
-    .flatMap(obj => Object.entries(obj.dependencies));
+    .flatMap(obj => parsePackageLock(obj));
 
   const tmp = [
     // Get all runtime dependencies
@@ -43,19 +41,28 @@ function initBom() {
       .filter(([, data]) => !data.dev)
       .map(([key, data]) => ({name: key, type: 'prod', ...data})),
     // Get only declared dev dependencies
-    ...fs.readdirSync(folder)
-      .filter(fn => fn.indexOf('-lock') === -1)
-      .map(fn => fs.readFileSync(path.join(folder, fn), {encoding: 'utf-8'}))
-      .map(content => JSON.parse(content))
-      .filter(obj => obj.devDependencies)
-      .flatMap(obj => Object.entries(obj.devDependencies))
-      .map(([key]) => packageLockDependencies.find(([plkey]) => plkey === key))
+    ...packageLockDependencies
+      .filter(([, data]) => !data.dev)
       .map(([key, data]) => ({name: key, type: 'dev', elaborated: false, ...data}))
   ];
   return uniqBy(tmp, el => el.name).sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function delta(bom) {
+function parsePackageLock(obj) {
+  if(obj.lockfileVersion === 1) {
+    // Handle v1
+    return Object.entries(obj.dependencies);
+  }
+  if(obj.lockfileVersion === 2) {
+    // Handle v2
+    return Object.entries(obj.packages)
+      .filter(([name]) => name !== '')
+      .map(([ name, dep ]) => [ name.replace(/^.*node_modules\//, ''), dep ]);
+  }
+  console.log(chalk.yellowBright(`Unknown lockfile version ${obj.lockfileVersion}`))
+}
+
+function delta(projectName, bom) {
   const originalBomPath = path.join(basePath, 'output', 'csv', `BOM-${projectName}.csv`);
   if (!fs.existsSync(originalBomPath)) {
     return bom;
@@ -106,11 +113,14 @@ function parseMetadata(metadata) {
     : dependenciesArray.length === 1
       ? dependenciesArray[0]
       : dependenciesArray.join(',');
-  const license = parseLicense(metadata?.license);
+  const license = parseLicense(metadata?.license || metadata?.licenses);
   return { license, dependencies };
 }
 
 function parseLicense(license) {
+  if (Array.isArray(license)) {
+    return license.flatMap(entry => parseLicense(entry));
+  }
   if (typeof license !== 'string') {
     return parseLicense(license?.type || '');
   }

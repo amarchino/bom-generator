@@ -1,5 +1,12 @@
-const { type } = require('./configuration/config');
+// @ts-check
+const { projects } = require('./configuration/config');
+const checkers = require('./checker');
+const { sequential } = require('./utils');
 
-const checker = require('./checker/' + type);
-checker.check()
+sequential(
+  Object.entries(projects),
+  async ([name, { type }]) => checkers[type].check(name)
+)
+.then(() => console.log('Check done'))
 .catch(err => console.error(err));
+

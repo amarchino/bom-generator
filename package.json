@@ -7,7 +7,8 @@
     "check": "node src/check.js",
     "grab": "node src/grab-files.js",
     "run": "node src/run.js",
-    "put": "node src/put.js"
+    "put": "node src/put.js",
+    "all": "npm run grab && npm run run && npm run check"
   },
   "keywords": [
     "BOM",

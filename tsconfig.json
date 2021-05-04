@@ -9,6 +9,7 @@
         "resolveJsonModule": true
     },
     "include": [
+        "types/**/*.d.ts",
         "src/**/*.js"
     ]
 }

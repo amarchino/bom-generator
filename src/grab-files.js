@@ -1,6 +1,11 @@
-const { type } = require('./configuration/config');
+// @ts-check
+const { projects } = require('./configuration/config');
+const grabbers = require('./grabber');
 
-const grabber = require('./grabber/' + type);
-grabber.grab()
-.then(() => console.log('done'))
+Promise.all(
+  Object.entries(projects)
+    .map(([name, { type, path }]) => grabbers[type].grab(name, path))
+)
+.then(() => console.log('Grabbing done'))
 .catch(err => console.error(err));
+

@@ -1,5 +1,10 @@
-const { type } = require('./configuration/config');
+// @ts-check
+const { projects } = require('./configuration/config');
+const executors = require('./executor');
 
-const executor = require('./executor/' + type);
-executor.execute()
+Promise.all(
+  Object.entries(projects)
+    .map(([name, { type }]) => executors[type].execute(name))
+)
+.then(() => console.log('Execution done'))
 .catch(err => console.error(err));

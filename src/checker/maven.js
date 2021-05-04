@@ -6,12 +6,12 @@ const chalk = require('chalk');
 const xmlJs = require('xml-js');
 const { parse } = require('papaparse');
 const { tap } = require('../utils');
-const { papaConfig, basePath, projectName } = require('../configuration/config');
+const { papaConfig, basePath } = require('../configuration/config');
 
-exports.check = async () => {
+exports.check = async (projectName) => {
   try {
-    const pom = readPom();
-    const bom = readBom();
+    const pom = readPom(projectName);
+    const bom = readBom(projectName);
     const csv = parse(bom, papaConfig).data;
     let hasRowsWithoutLicense = true;
     for(const row of csv) {
@@ -32,11 +32,11 @@ exports.check = async () => {
   }
 };
 
-function readBom() {
+function readBom(projectName) {
   return fs.readFileSync(path.join(basePath, 'output', 'csv', `BOM-${projectName}.csv`), {encoding: 'utf-8'});
 }
 
-function readPom() {
+function readPom(projectName) {
   const folder = path.join(basePath, 'input', 'maven', projectName);
   if(!fs.existsSync(folder)) {
     return [];

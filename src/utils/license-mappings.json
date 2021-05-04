@@ -1,4 +1,10 @@
 {
+    "AFL 2.1": {
+        "link": "https://spdx.org/licenses/AFL-2.1",
+        "substitutions": [
+            "AFLV2.1"
+        ]
+    },
     "Apache 2.0": {
         "link": "https://www.apache.org/licenses/LICENSE-2.0",
         "substitutions": [
@@ -12,10 +18,18 @@
             "APACHE"
         ]
     },
-    "BSD 3-clause": {
+    "BSD 2-CLAUSE": {
+        "link": "https://opensource.org/licenses/BSD-2-Clause",
+        "substitutions": [
+            "BSD 2-CLAUSE",
+            "BSD-2-CLAUSE"
+        ]
+    },
+    "BSD 3-CLAUSE": {
         "link": "https://opensource.org/licenses/BSD-3-Clause",
         "substitutions": [
             "BSD 3-CLAUSE",
+            "BSD-3-CLAUSE",
             "BSD"
         ]
     },
@@ -77,6 +91,12 @@
             "GPL 2.0"
         ]
     },
+    "ISC": {
+        "link": "https://opensource.org/licenses/ISC",
+        "substitutions": [
+            "ISC"
+        ]
+    },
     "LGPL 3.0": {
         "link": "https://opensource.org/licenses/LGPL-3.0",
         "substitutions": [
@@ -98,10 +118,16 @@
             "OFL-1.1"
         ]
     },
-    "Public": {
+    "PUBLIC": {
         "link": null,
         "substitutions": [
             "PUBLIC"
         ]
-    }
+    },
+    "UNLICENSE": {
+      "link": "https://opensource.org/licenses/Unlicense",
+      "substitutions": [
+          "UNLICENSE"
+      ]
+  }
 }

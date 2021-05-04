@@ -1,4 +1,5 @@
 // @ts-check
 module.exports = {
-  ...require('./helper')
+  ...require('./helper'),
+  ...require('./promise')
 };
