@@ -30,6 +30,7 @@
         "substitutions": [
             "BSD 3-CLAUSE",
             "BSD-3-CLAUSE",
+            "BSD LICENSE",
             "BSD"
         ]
     },
@@ -69,6 +70,7 @@
         "link": "https://www.eclipse.org/legal/epl-v10.html",
         "substitutions": [
             "ECLIPSE PUBLIC LICENSE - V 1.0",
+            "ECLIPSE PUBLIC LICENSE 1.0",
             "EPL 1.0"
         ]
     },
@@ -124,10 +126,17 @@
             "PUBLIC"
         ]
     },
+    "POSTGRESQL": {
+        "link": "https://opensource.org/licenses/PostgreSQL",
+        "substitutions": [
+            "POSTGRESQL",
+            "THE POSTGRESQL LICENSE"
+        ]
+    },
     "UNLICENSE": {
-      "link": "https://opensource.org/licenses/Unlicense",
-      "substitutions": [
-          "UNLICENSE"
-      ]
-  }
+        "link": "https://opensource.org/licenses/Unlicense",
+        "substitutions": [
+            "UNLICENSE"
+        ]
+    }
 }

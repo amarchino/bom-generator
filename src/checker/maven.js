@@ -3,10 +3,11 @@ const init = Date.now();
 const path = require('path');
 const fs = require('fs');
 const chalk = require('chalk');
-const xmlJs = require('xml-js');
 const { parse } = require('papaparse');
-const { tap } = require('../utils');
+const { maven } = require('../utils');
 const { papaConfig, basePath } = require('../configuration/config');
+
+const { parseBom } = maven;
 
 exports.check = async (projectName) => {
   try {
@@ -37,24 +38,6 @@ function readBom(projectName) {
 }
 
 function readPom(projectName) {
-  const folder = path.join(basePath, 'input', 'maven', projectName);
-  if(!fs.existsSync(folder)) {
-    return [];
-  }
-  const projectGroupIds = {};
-
-  const tmp = fs.readdirSync(folder)
-    .filter(fn => path.extname(fn) === '.xml')
-    .map(fn => fs.readFileSync(path.join(folder, fn), {encoding: 'utf-8'}))
-    .map(content => xmlJs.xml2js(content, { compact: true, trim: true, nativeType: false}))
-    .map(tap(el => projectGroupIds[el['project'].groupId._text] = true))
-    .filter(obj => obj['project'].dependencyManagement?.dependencies)
-    .flatMap(obj => obj['project'].dependencyManagement.dependencies.dependency)
-    .map(obj => ({groupId: obj.groupId._text, artifactId: obj.artifactId._text, version: obj.version._text, elaborated: false}))
-    .filter(dep => !projectGroupIds[dep.groupId])
-    .map(dep => ({key: `${dep.groupId}$$$${dep.artifactId}$$$${dep.version}`, dep}))
-    .reduce((acc, {key, dep}) => (acc[key] = dep, acc), {});
-  return Object.values(tmp)
-    .sort((a, b) => a.artifactId.localeCompare(b.artifactId))
+  return parseBom(projectName)
     .reduce((acc, el) => (acc[el.artifactId] = el) && acc, {});
 }

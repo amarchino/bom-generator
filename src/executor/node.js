@@ -69,8 +69,10 @@ function delta(projectName, bom) {
   }
   const originalBomFile = fs.readFileSync(originalBomPath, {encoding: 'utf-8'});
   const originalBomCSV = parse(originalBomFile, papaConfig).data;
-  const originalBom = originalBomCSV.map(el => ({name: el['name*'], version: el['version*'], elaborated: true, license: el['license*'], dependencies: el.dependencies}));
-  const delta = bom.filter(el => originalBom.every(l => l.name !== el.name));
+  const originalBom = originalBomCSV
+    .map(el => ({name: el['name*'], version: el['version*'], elaborated: true, license: el['license*'], dependencies: el.dependencies}))
+    .filter(el => bom.find(l => l.name === el.name));
+  const delta = bom.filter(el => !originalBom.find(l => l.name === el.name));
   return [
     ...originalBom,
     ...delta
@@ -80,10 +82,11 @@ function delta(projectName, bom) {
 async function populateVersionData(bom) {
   let idx = 0;
   const deps = bom.filter(el => !el.elaborated);
-  let total = deps.length;
+  const total = deps.length;
+  const padLength = Math.floor(Math.log10(total)) + 1;
   for(let dep of deps) {
     // E.g.: https://registry.npmjs.org/zone.js/0.10.2
-    const index = (++idx + '').padStart(Math.floor(Math.log10(total)) + 1, ' ');
+    const index = (++idx + '').padStart(padLength, ' ');
     console.log(`(${index}/${total}) Elaborating license for DEPENDENCY: "${chalk.redBright(dep.name)}", VERSION: "${chalk.greenBright(dep.version)}"`);
     const url = `https://registry.npmjs.org/${dep.name}`;
     const packageMetadata = await readPackageMetadata(url, dep.version);

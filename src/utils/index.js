@@ -1,5 +1,6 @@
 // @ts-check
 module.exports = {
   ...require('./helper'),
-  ...require('./promise')
+  ...require('./promise'),
+  maven: { ...require('./maven') }
 };
