@@ -31,7 +31,8 @@
             "BSD 3-CLAUSE",
             "BSD-3-CLAUSE",
             "BSD LICENSE",
-            "BSD"
+            "BSD",
+            "BSD 3-CLAUSE NEW LICENSE"
         ]
     },
     "CC0": {
@@ -54,6 +55,8 @@
             "CDDL 1.0",
             "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) VERSION 1.0",
             "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE 1.0",
+            "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE",
+            "DUAL LICENSE CONSISTING OF THE CDDL V1.1 AND GPL V2",
             "CDDL + GPLV2 WITH CLASSPATH EXCEPTION",
             "CDDL/GPLV2+CE",
             "CDDL OR GPLV2 WITH EXCEPTIONS"
@@ -66,11 +69,19 @@
             "CDDL 1.1"
         ]
     },
+    "EDL 1.0": {
+        "link": "https://www.eclipse.org/legal/edl-v10.html",
+        "substitutions": [
+            "ECLIPSE DISTRIBUTION LICENSE V. 1.0",
+            "EDL 1.0"
+        ]
+    },
     "EPL 1.0": {
         "link": "https://www.eclipse.org/legal/epl-v10.html",
         "substitutions": [
             "ECLIPSE PUBLIC LICENSE - V 1.0",
             "ECLIPSE PUBLIC LICENSE 1.0",
+            "ECLIPSE PUBLIC LICENSE V1.0",
             "EPL 1.0"
         ]
     },
@@ -99,6 +110,13 @@
             "ISC"
         ]
     },
+    "LGPL 2.1": {
+        "link": "https://opensource.org/licenses/LGPL-2.1",
+        "substitutions": [
+            "GNU LIBRARY GENERAL PUBLIC LICENSE V2.1 OR LATER",
+            "LGPL 2.1"
+        ]
+    },
     "LGPL 3.0": {
         "link": "https://opensource.org/licenses/LGPL-3.0",
         "substitutions": [
@@ -112,6 +130,12 @@
             "THE MIT LICENSE",
             "MIT LICENSE",
             "MIT"
+        ]
+    },
+    "MPL 1.1": {
+        "link": "https://opensource.org/licenses/MPL-1.1",
+        "substitutions": [
+            "MPL 1.1"
         ]
     },
     "OFL-1.1": {
