@@ -1,16 +1,15 @@
-// @ts-check
-const init = Date.now();
-const path = require('path');
-const fs = require('fs');
-const xmlJs = require('xml-js');
-const chalk = require('chalk');
-const { parse, unparse } = require('papaparse');
-const { httpRequest, writeOutput, generateThirdPartyNoticeMarkdown, licenseMappings, licenseFallbacks, maven } = require('../utils');
-const { papaConfig, basePath } = require('../configuration/config');
+import * as chalk from 'chalk';
+import { existsSync, readFileSync } from 'fs';
+import { parse, unparse } from 'papaparse';
+import { join } from 'path';
+import { xml2js } from 'xml-js';
+import { basePath, papaConfig } from '../configuration/config';
+import { ExportContainer, MavenBom } from '../interfaces';
+import { generateThirdPartyNoticeMarkdown, httpRequest, licenseFallbacks, licenseMappings, writeOutput } from '../utils';
+import { parseBom } from '../utils/maven';
 
-const { parseBom } = maven;
-
-exports.execute = async (projectName) => {
+export async function execute(projectName: string): Promise<void> {
+  const init = Date.now();
   try {
     let bom = parseBom(projectName);
     bom = delta(projectName, bom);
@@ -24,12 +23,12 @@ exports.execute = async (projectName) => {
   }
 };
 
-function delta(projectName, bom) {
-  const originalBomPath = path.join(basePath, 'output', 'csv', `BOM-${projectName}.csv`);
-  if (!fs.existsSync(originalBomPath)) {
+function delta(projectName: string, bom: MavenBom[]): MavenBom[] {
+  const originalBomPath = join(basePath, 'output', 'csv', `BOM-${projectName}.csv`);
+  if (!existsSync(originalBomPath)) {
     return bom;
   }
-  const originalBomFile = fs.readFileSync(originalBomPath, {encoding: 'utf-8'});
+  const originalBomFile = readFileSync(originalBomPath, {encoding: 'utf-8'});
   const originalBomCSV = parse(originalBomFile, papaConfig).data;
   const originalBom = originalBomCSV
     .map(el => ({groupId: '', artifactId: el['name*'], version: el['version*'], elaborated: true, license: el['license*']}))
@@ -48,7 +47,6 @@ async function populateVersionData(bom) {
   const total = deps.length;
   const padLength = Math.floor(Math.log10(total)) + 1;
   for(let dep of deps) {
-    // E.g.: https://mvnrepository.com/artifact/javax.activation/javax.activation-api/1.2.0
     const index = (++idx + '').padStart(padLength, ' ');
     console.log(`(${index}/${total}) Elaborating license for GROUP ID: "${chalk.redBright(dep.groupId)}", ARTIFACT ID: "${chalk.yellowBright(dep.artifactId)}", VERSION: "${chalk.greenBright(dep.version)}"`);
     const license = await readLicense(dep);
@@ -57,20 +55,25 @@ async function populateVersionData(bom) {
   return bom;
 }
 
-async function readLicense(dep) {
-  const url = `https://repo.maven.apache.org/maven2/${dep.groupId.replace(/\./g, '/')}/${dep.artifactId}/${dep.version}/${dep.artifactId}-${dep.version}.pom`;
-  let xml;
-  try {
-    const content = await httpRequest(url);
-    xml = xmlJs.xml2js(content, { compact: true, trim: true, nativeType: false });
-  } catch(e) {
-    console.log(chalk.redBright(`Error in XML parsing. Please check https://mvnrepository.com/artifact/${dep.groupId}/${dep.artifactId}/${dep.version}`));
-    return [];
+async function readLicense(dep: MavenBom) {
+  let licenseList = dep.license;
+  if(!licenseList.length) {
+    const url = `https://repo.maven.apache.org/maven2/${dep.groupId.replace(/\./g, '/')}/${dep.artifactId}/${dep.version}/${dep.artifactId}-${dep.version}.pom`;
+    let xml;
+    try {
+      const content = await httpRequest(url);
+      xml = xml2js(content, { compact: true, trim: true, nativeType: false });
+      let tmpLicenses = xml['project'].licenses?.license;
+      if(!Array.isArray(tmpLicenses)) {
+        tmpLicenses = [ tmpLicenses ];
+      }
+      licenseList = tmpLicenses.map(l => l.name._text.trim());
+    } catch(e) {
+      console.log(chalk.redBright(`Error in XML parsing. Please check https://mvnrepository.com/artifact/${dep.groupId}/${dep.artifactId}/${dep.version}`));
+      return [];
+    }
   }
-  let licenseList = xml['project'].licenses?.license;
-  if(!Array.isArray(licenseList)) {
-    licenseList = [ licenseList ];
-  }
+
   licenseList = licenseList.filter(Boolean);
   // Allow override of license
   if(licenseFallbacks.maven?.[dep.groupId]?.[dep.artifactId]?.[dep.version]) {
@@ -78,10 +81,11 @@ async function readLicense(dep) {
   }
 
   const licenses = licenseList
-    .flatMap(l => ({licenseText: l.name._text.trim(), license: l.name._text.replace(/\s*(\r\n|\n|\r)\s*/gm, ' ').toUpperCase().trim()}))
+    .flatMap(l => ({licenseText: l, license: l.replace(/\s*(\r\n|\n|\r)\s*/gm, ' ').toUpperCase().trim()}))
     .map(({licenseText, license}) => {
-      const tmp = {licenseText, license: licenseMappings.reduce((acc, [key,el]) => (el.substitutions.indexOf(license) !== -1 && acc.push(key), acc), [])};
+      const tmp = {licenseText, license: licenseMappings.reduce((acc, [key,el]) => ((el as any).substitutions.indexOf(license) !== -1 && acc.push(key), acc), [])};
       if(!tmp.license.length) {
+        console.log(chalk.yellowBright(`Unmapped license ${license}`));
         tmp.license.push(license);
       }
       return tmp;
@@ -96,7 +100,7 @@ async function readLicense(dep) {
   return [];
 }
 
-function generateOutput(bom) {
+function generateOutput(bom: MavenBom[]): ExportContainer {
   bom.sort((a, b) => a.artifactId.localeCompare(b.artifactId) || a.version.localeCompare(b.version));
   const csv = generateBomCsv(bom);
   console.log(chalk.cyanBright('BOM generated'));
@@ -105,7 +109,7 @@ function generateOutput(bom) {
   return { csv, markdown };
 }
 
-function generateBomCsv(bom) {
+function generateBomCsv(bom: MavenBom[]) {
   return unparse(bom.map(el => ({
     'name*': el.artifactId,
     'version*': el.version,

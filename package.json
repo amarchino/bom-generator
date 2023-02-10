@@ -8,9 +8,9 @@
   },
   "scripts": {
     "check": "node src/check.js",
-    "grab": "node src/grab-files.js",
-    "run": "node src/run.js",
-    "put": "node src/put.js",
+    "grab": "ts-node src/grab-files.ts",
+    "run": "ts-node src/run.ts",
+    "put": "ts-node src/put.ts",
     "all": "npm run grab && npm run run && npm run check"
   },
   "keywords": [
@@ -26,6 +26,7 @@
     "jsdom": "^19.0.0",
     "json5": "^2.2.0",
     "papaparse": "^5.3.1",
+    "ts-node": "^10.9.1",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {

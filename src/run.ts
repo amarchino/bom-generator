@@ -1,6 +1,5 @@
-// @ts-check
-const { projects } = require('./configuration/config');
-const executors = require('./executor');
+import { projects } from './configuration/config';
+import * as executors from './executor';
 
 Promise.all(
   Object.entries(projects)

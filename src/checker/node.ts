@@ -1,12 +1,11 @@
-// @ts-check
-const init = Date.now();
-const path = require('path');
-const fs = require('fs');
-const chalk = require('chalk');
-const { parse } = require('papaparse');
-const { papaConfig, basePath } = require('../configuration/config');
+import * as chalk from 'chalk';
+import { readFileSync } from 'fs';
+import { parse } from 'papaparse';
+import { join } from 'path';
+import { basePath, papaConfig } from '../configuration/config';
 
-exports.check = async (projectName) => {
+export async function check(projectName: string): Promise<void> {
+  const init = Date.now();
   try {
     const bom = readBom(projectName);
     const csv = parse(bom, papaConfig).data;
@@ -29,5 +28,5 @@ exports.check = async (projectName) => {
 };
 
 function readBom(projectName) {
-  return fs.readFileSync(path.join(basePath, 'output', 'csv', `BOM-${projectName}.csv`), {encoding: 'utf-8'});
+  return readFileSync(join(basePath, 'output', 'csv', `BOM-${projectName}.csv`), {encoding: 'utf-8'});
 }

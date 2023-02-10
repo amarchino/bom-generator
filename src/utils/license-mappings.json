@@ -92,7 +92,8 @@
         "link": "https://www.eclipse.org/legal/edl-v10.html",
         "substitutions": [
             "EDL 1.0",
-            "ECLIPSE DISTRIBUTION LICENSE V. 1.0"
+            "ECLIPSE DISTRIBUTION LICENSE V. 1.0",
+            "ECLIPSE DISTRIBUTION LICENSE - V 1.0"
         ]
     },
     "EPL 1.0": {
@@ -132,7 +133,8 @@
             "DUAL LICENSE CONSISTING OF THE CDDL V1.1 AND GPL V2",
             "GPL2 W/ CPE",
             "GNU GENERAL PUBLIC LICENSE V2.0 ONLY, WITH CLASSPATH EXCEPTION",
-            "GNU GENERAL PUBLIC LICENSE, VERSION 2 WITH THE CLASSPATH EXCEPTION"
+            "GNU GENERAL PUBLIC LICENSE, VERSION 2 WITH THE CLASSPATH EXCEPTION",
+            "THE GNU GENERAL PUBLIC LICENSE, V2 WITH FOSS EXCEPTION"
         ]
     },
     "ISC": {
@@ -145,7 +147,8 @@
         "link": "https://opensource.org/licenses/LGPL-2.1",
         "substitutions": [
             "LGPL 2.1",
-            "GNU LIBRARY GENERAL PUBLIC LICENSE V2.1 OR LATER"
+            "GNU LIBRARY GENERAL PUBLIC LICENSE V2.1 OR LATER",
+            "GNU LESSER GENERAL PUBLIC LICENSE"
         ]
     },
     "LGPL 3.0": {

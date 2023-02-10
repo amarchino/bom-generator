@@ -1,13 +1,14 @@
-// @ts-check
-const init = Date.now();
-const path = require('path');
-const fs = require('fs');
-const chalk = require('chalk');
-const { parse, unparse } = require('papaparse');
-const { uniqBy, httpRequest, writeOutput, generateThirdPartyNoticeMarkdown, licenseMappings } = require('../utils');
-const { papaConfig, basePath } = require('../configuration/config');
+import * as chalk from 'chalk';
+import { existsSync, readdirSync, readFileSync } from 'fs';
+import { parse as json5parse } from 'json5';
+import { parse, unparse } from 'papaparse';
+import { join } from 'path';
+import { basePath, papaConfig } from '../configuration/config';
+import { NodeBom } from '../interfaces';
+import { generateThirdPartyNoticeMarkdown, httpRequest, licenseMappings, uniqBy, writeOutput } from '../utils';
 
-exports.execute = async (projectName) => {
+export async function execute(projectName: string): Promise<void> {
+  const init = Date.now();
   try {
     let bom = initBom(projectName);
     bom = delta(projectName, bom);
@@ -19,20 +20,17 @@ exports.execute = async (projectName) => {
   } finally {
     console.log(chalk.greenBright(`Elapsed time: ${Date.now() - init} ms`))
   }
-};
+}
 
-/**
- * @returns {{name: string, type: 'dev' | 'prod', version: string, license: string, dependencies: string}[]}
- */
-function initBom(projectName) {
-  const folder = path.join(basePath, 'input', 'node', projectName);
-  if(!fs.existsSync(folder)) {
+function initBom(projectName: string): NodeBom[] {
+  const folder = join(basePath, 'input', 'node', projectName);
+  if(!existsSync(folder)) {
     return [];
   }
-  const packageLockDependencies = fs.readdirSync(folder)
+  const packageLockDependencies: any[][] = readdirSync(folder)
     .filter(fn => fn.indexOf('-lock') !== -1)
-    .map(fn => fs.readFileSync(path.join(folder, fn), {encoding: 'utf-8'}))
-    .map(content => JSON.parse(content))
+    .map(fn => readFileSync(join(folder, fn), {encoding: 'utf-8'}))
+    .map(content => json5parse(content))
     .flatMap(obj => parsePackageLock(obj));
 
   const tmp = [
@@ -48,7 +46,7 @@ function initBom(projectName) {
   return uniqBy(tmp, el => el.name).sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function parsePackageLock(obj) {
+function parsePackageLock(obj: any) {
   if(obj.lockfileVersion === 1) {
     // Handle v1
     return Object.entries(obj.dependencies);
@@ -62,15 +60,15 @@ function parsePackageLock(obj) {
   console.log(chalk.yellowBright(`Unknown lockfile version ${obj.lockfileVersion}`))
 }
 
-function delta(projectName, bom) {
-  const originalBomPath = path.join(basePath, 'output', 'csv', `BOM-${projectName}.csv`);
-  if (!fs.existsSync(originalBomPath)) {
+function delta(projectName: string, bom) {
+  const originalBomPath = join(basePath, 'output', 'csv', `BOM-${projectName}.csv`);
+  if (!existsSync(originalBomPath)) {
     return bom;
   }
-  const originalBomFile = fs.readFileSync(originalBomPath, {encoding: 'utf-8'});
+  const originalBomFile = readFileSync(originalBomPath, {encoding: 'utf-8'});
   const originalBomCSV = parse(originalBomFile, papaConfig).data;
   const originalBom = originalBomCSV
-    .map(el => ({name: el['name*'], version: el['version*'], elaborated: true, license: el['license*'], dependencies: el.dependencies}))
+    .map((el: any) => ({name: el['name*'], version: el['version*'], elaborated: true, license: el['license*'], dependencies: el.dependencies}))
     .filter(el => bom.find(l => l.name === el.name));
   const delta = bom.filter(el => !originalBom.find(l => l.name === el.name));
   return [
@@ -133,7 +131,7 @@ function parseLicense(license) {
     .flatMap(lic => parseLicenseArray(lic));
 }
 function parseLicenseArray(lic) {
-  const tmp = licenseMappings.reduce((acc, [key, el]) => (el.substitutions.indexOf(lic.toUpperCase()) !== -1 && acc.push(key), acc), []);
+  const tmp = licenseMappings.reduce((acc, [key, el]) => ((el as any).substitutions.indexOf(lic.toUpperCase()) !== -1 && acc.push(key), acc), []);
   if(!tmp || !tmp.length) {
     console.log(`  Missing license "${chalk.redBright(lic)}". Using read value`);
   }

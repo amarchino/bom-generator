@@ -1,7 +1,6 @@
-// @ts-check
-const { projects } = require('./configuration/config');
-const checkers = require('./checker');
-const { sequential } = require('./utils');
+import * as checkers from './checker';
+import { projects } from './configuration/config';
+import { sequential } from './utils';
 
 sequential(
   Object.entries(projects),
