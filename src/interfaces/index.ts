@@ -24,3 +24,21 @@ export interface ProjectConfiguration {
   type: 'maven' | 'node';
 }
 
+export interface ThirdPartDependencies {
+  Size: XmlElement;
+  Message: XmlElement;
+  Dependencies: { Dependency: ThirdPartDependenciesDependency[] }
+}
+
+export interface ThirdPartDependenciesDependency {
+  Name: XmlElement;
+  GroupId: XmlElement;
+  ArtifactId: XmlElement;
+  Version: XmlElement;
+  Url: XmlElement;
+  Licenses: { License: XmlElement[] | XmlElement }
+}
+
+export interface XmlElement {
+  _text: string;
+}
