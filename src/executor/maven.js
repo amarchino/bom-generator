@@ -5,7 +5,7 @@ const fs = require('fs');
 const xmlJs = require('xml-js');
 const chalk = require('chalk');
 const { parse, unparse } = require('papaparse');
-const { httpRequest, writeOutput, generateThirdPartyNoticeMarkdown, licenseMappings, maven } = require('../utils');
+const { httpRequest, writeOutput, generateThirdPartyNoticeMarkdown, licenseMappings, licenseFallbacks, maven } = require('../utils');
 const { papaConfig, basePath } = require('../configuration/config');
 
 const { parseBom } = maven;
@@ -59,9 +59,9 @@ async function populateVersionData(bom) {
 
 async function readLicense(dep) {
   const url = `https://repo.maven.apache.org/maven2/${dep.groupId.replace(/\./g, '/')}/${dep.artifactId}/${dep.version}/${dep.artifactId}-${dep.version}.pom`;
-  const content = await httpRequest(url);
   let xml;
   try {
+    const content = await httpRequest(url);
     xml = xmlJs.xml2js(content, { compact: true, trim: true, nativeType: false });
   } catch(e) {
     console.log(chalk.redBright(`Error in XML parsing. Please check https://mvnrepository.com/artifact/${dep.groupId}/${dep.artifactId}/${dep.version}`));
@@ -71,9 +71,14 @@ async function readLicense(dep) {
   if(!Array.isArray(licenseList)) {
     licenseList = [ licenseList ];
   }
+  licenseList = licenseList.filter(Boolean);
+  // Allow override of license
+  if(licenseFallbacks.maven?.[dep.groupId]?.[dep.artifactId]?.[dep.version]) {
+    licenseList = licenseFallbacks.maven[dep.groupId][dep.artifactId][dep.version].map(el => ({ name: { _text: el } }));
+  }
+
   const licenses = licenseList
-    .filter(Boolean)
-    .flatMap(l => ({licenseText: l.name._text, license: l.name._text.replace(/\s*(\r\n|\n|\r)\s*/gm, ' ').toUpperCase()}))
+    .flatMap(l => ({licenseText: l.name._text.trim(), license: l.name._text.replace(/\s*(\r\n|\n|\r)\s*/gm, ' ').toUpperCase().trim()}))
     .map(({licenseText, license}) => {
       const tmp = {licenseText, license: licenseMappings.reduce((acc, [key,el]) => (el.substitutions.indexOf(license) !== -1 && acc.push(key), acc), [])};
       if(!tmp.license.length) {

@@ -29,8 +29,12 @@ function parseBomPomTxt(folder, files) {
   .flatMap(content => content.split(/\r?\n/))
   .filter(line => line && line !== 'The following files have been resolved:' && line !== '   none')
   .map(line => line.trim().split(':'))
-  .reduce((acc, [groupId, artifactId, , version]) => {
-    acc[`${groupId}$$$${artifactId}$$$${version}`] = {groupId, artifactId, version, elaborated: false};
+  .reduce((acc, [groupId, artifactId, , version, other]) => {
+    if(other.startsWith('compile') || other.startsWith('provided') || other.startsWith('test') || other.startsWith('runtime')) {
+      acc[`${groupId}$$$${artifactId}$$$${version}`] = {groupId, artifactId, version, elaborated: false};
+    } else {
+      acc[`${groupId}$$$${artifactId}$$$${other}`] = {groupId, artifactId, version: other, elaborated: false};
+    }
     return acc;
   }, {});
 }

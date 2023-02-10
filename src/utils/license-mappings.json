@@ -5,24 +5,33 @@
             "AFLV2.1"
         ]
     },
-    "Apache 2.0": {
+    "APACHE 2.0": {
         "link": "https://www.apache.org/licenses/LICENSE-2.0",
         "substitutions": [
+            "APACHE 2.0",
             "APACHE LICENSE, VERSION 2.0",
             "JSR-000107 JCACHE 2.9 PUBLIC REVIEW - UPDATED SPECIFICATION LICENSE",
             "THE APACHE SOFTWARE LICENSE, VERSION 2.0",
             "APACHE 2",
-            "APACHE 2.0",
             "APACHE-2.0",
             "APACHE LICENSE 2.0",
-            "APACHE"
+            "APACHE",
+            "THE APACHE LICENSE, VERSION 2.0"
+        ]
+    },
+    "BSD 0-CLAUSE": {
+        "link": "https://opensource.org/licenses/0BSD",
+        "substitutions": [
+            "BSD 0-CLAUSE",
+            "0BSD"
         ]
     },
     "BSD 2-CLAUSE": {
         "link": "https://opensource.org/licenses/BSD-2-Clause",
         "substitutions": [
             "BSD 2-CLAUSE",
-            "BSD-2-CLAUSE"
+            "BSD-2-CLAUSE",
+            "THE BSD LICENSE"
         ]
     },
     "BSD 3-CLAUSE": {
@@ -32,14 +41,23 @@
             "BSD-3-CLAUSE",
             "BSD LICENSE",
             "BSD",
-            "BSD 3-CLAUSE NEW LICENSE"
+            "BSD 3-CLAUSE NEW LICENSE",
+            "BSD LICENCE",
+            "BSD LICENSE 3"
+        ]
+    },
+    "BOUNCY CASTLE LICENCE": {
+        "link": "https://www.bouncycastle.org/licence.html",
+        "substitutions": [
+            "BOUNCY CASTLE LICENCE"
         ]
     },
     "CC0": {
         "link": "https://creativecommons.org/publicdomain/zero/1.0/legalcode",
         "substitutions": [
             "CC0",
-            "CC0 1.0"
+            "CC0 1.0",
+            "PUBLIC DOMAIN, PER CREATIVE COMMONS CC0"
         ]
     },
     "CC-BY-4.0": {
@@ -51,57 +69,70 @@
     "CDDL 1.0": {
         "link": "https://opensource.org/licenses/CDDL-1.0",
         "substitutions": [
-            "CDDL",
             "CDDL 1.0",
+            "CDDL",
             "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) VERSION 1.0",
             "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE 1.0",
             "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE",
             "DUAL LICENSE CONSISTING OF THE CDDL V1.1 AND GPL V2",
             "CDDL + GPLV2 WITH CLASSPATH EXCEPTION",
             "CDDL/GPLV2+CE",
-            "CDDL OR GPLV2 WITH EXCEPTIONS"
+            "CDDL OR GPLV2 WITH EXCEPTIONS",
+            "CDDL LICENSE"
         ]
     },
     "CDDL 1.1": {
         "link": "https://spdx.org/licenses/CDDL-1.1.html",
         "substitutions": [
-            "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE 1.1",
-            "CDDL 1.1"
+            "CDDL 1.1",
+            "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE 1.1"
         ]
     },
     "EDL 1.0": {
         "link": "https://www.eclipse.org/legal/edl-v10.html",
         "substitutions": [
-            "ECLIPSE DISTRIBUTION LICENSE V. 1.0",
-            "EDL 1.0"
+            "EDL 1.0",
+            "ECLIPSE DISTRIBUTION LICENSE V. 1.0"
         ]
     },
     "EPL 1.0": {
         "link": "https://www.eclipse.org/legal/epl-v10.html",
         "substitutions": [
+            "EPL 1.0",
             "ECLIPSE PUBLIC LICENSE - V 1.0",
             "ECLIPSE PUBLIC LICENSE 1.0",
             "ECLIPSE PUBLIC LICENSE V1.0",
-            "EPL 1.0"
+            "MPL 2.0 OR EPL 1.0"
+        ]
+    },
+    "EPL 2.0": {
+        "link": "https://www.eclipse.org/legal/epl-v20.html",
+        "substitutions": [
+            "EPL 2.0",
+            "ECLIPSE PUBLIC LICENSE - V 2.0",
+            "ECLIPSE PUBLIC LICENSE 2.0",
+            "ECLIPSE PUBLIC LICENSE V. 2.0",
+            "ECLIPSE PUBLIC LICENSE V2.0"
         ]
     },
     "GPL 1.0": {
         "link": "https://www.gnu.org/licenses/old-licenses/gpl-1.0.en.html",
         "substitutions": [
-            "GPL",
+            "GPL 1.0",
             "GPL 1.1"
         ]
     },
     "GPL 2.0": {
         "link": "https://opensource.org/licenses/GPL-2.0",
         "substitutions": [
+            "GPL 2.0",
             "CDDL + GPLV2 WITH CLASSPATH EXCEPTION",
             "CDDL/GPLV2+CE",
             "CDDL OR GPLV2 WITH EXCEPTIONS",
+            "DUAL LICENSE CONSISTING OF THE CDDL V1.1 AND GPL V2",
             "GPL2 W/ CPE",
             "GNU GENERAL PUBLIC LICENSE V2.0 ONLY, WITH CLASSPATH EXCEPTION",
-            "GNU GENERAL PUBLIC LICENSE, VERSION 2 WITH THE CLASSPATH EXCEPTION",
-            "GPL 2.0"
+            "GNU GENERAL PUBLIC LICENSE, VERSION 2 WITH THE CLASSPATH EXCEPTION"
         ]
     },
     "ISC": {
@@ -113,29 +144,37 @@
     "LGPL 2.1": {
         "link": "https://opensource.org/licenses/LGPL-2.1",
         "substitutions": [
-            "GNU LIBRARY GENERAL PUBLIC LICENSE V2.1 OR LATER",
-            "LGPL 2.1"
+            "LGPL 2.1",
+            "GNU LIBRARY GENERAL PUBLIC LICENSE V2.1 OR LATER"
         ]
     },
     "LGPL 3.0": {
         "link": "https://opensource.org/licenses/LGPL-3.0",
         "substitutions": [
-            "LGPLV3 OR LATER",
-            "LGPL 3.0"
+            "LGPL 3.0",
+            "LGPLV3 OR LATER"
         ]
     },
     "MIT": {
         "link": "https://opensource.org/licenses/MIT",
         "substitutions": [
+            "MIT",
             "THE MIT LICENSE",
             "MIT LICENSE",
-            "MIT"
+            "THE MIT LICENSE (MIT)"
         ]
     },
     "MPL 1.1": {
         "link": "https://opensource.org/licenses/MPL-1.1",
         "substitutions": [
             "MPL 1.1"
+        ]
+    },
+    "MPL 2.0": {
+        "link": "https://opensource.org/licenses/MPL-2.0",
+        "substitutions": [
+            "MPL 2.0",
+            "MPL 2.0 OR EPL 1.0"
         ]
     },
     "OFL-1.1": {
@@ -147,7 +186,8 @@
     "PUBLIC": {
         "link": null,
         "substitutions": [
-            "PUBLIC"
+            "PUBLIC",
+            "PUBLIC DOMAIN"
         ]
     },
     "POSTGRESQL": {
@@ -161,6 +201,13 @@
         "link": "https://opensource.org/licenses/Unlicense",
         "substitutions": [
             "UNLICENSE"
+        ]
+    },
+    "XPP": {
+        "link": "https://spdx.org/licenses/xpp.html",
+        "substitutions": [
+            "XPP",
+            "INDIANA UNIVERSITY EXTREME! LAB SOFTWARE LICENSE"
         ]
     }
 }

@@ -1,0 +1,287 @@
+{
+    "maven": {
+        "org.antlr": {
+            "antlr-runtime": {
+                "3.4": ["BSD"]
+            }
+        },
+        "org.ow2.asm": {
+            "asm": {
+                "5.0.4": ["BSD"]
+            }
+        },
+        "org.assertj": {
+            "assertj-core": {
+                "3.16.1": ["Apache 2.0"]
+            }
+        },
+        "io.zipkin.brave": {
+            "brave": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-context-slf4j": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-http": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-httpasyncclient": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-httpclient": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-jms": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-kafka-clients": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-kafka-streams": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-messaging": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-rpc": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-servlet": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-spring-rabbit": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-spring-web": {
+                "5.12.7": ["Apache 2.0"]
+            },
+            "brave-instrumentation-spring-webmvc": {
+                "5.12.7": ["Apache 2.0"]
+            }
+        },
+        "net.bytebuddy": {
+            "byte-buddy": {
+                "1.10.22": ["Apache 2.0"]
+            },
+            "byte-buddy-agent": {
+                "1.10.22": ["Apache 2.0"]
+            }
+        },
+        "commons-codec": {
+            "commons-codec": {
+                "1.14": ["Apache 2.0"]
+            }
+        },
+        "commons-collections": {
+            "commons-collections": {
+                "3.2.2": ["Apache 2.0"]
+            }
+        },
+        "commons-configuration": {
+            "commons-configuration": {
+                "1.8": ["Apache 2.0"]
+            }
+        },
+        "commons-jxpath": {
+            "commons-jxpath": {
+                "1.3": ["Apache 2.0"]
+            }
+        },
+        "commons-lang": {
+            "commons-lang": {
+                "2.6": ["Apache 2.0"]
+            }
+        },
+        "org.apache.commons": {
+            "commons-math": {
+                "2.2": ["Apache 2.0"]
+            }
+        },
+        "com.google.guava": {
+            "failureaccess": {
+                "1.0.1": ["Apache 2.0"]
+            },
+            "guava": {
+                "30.0-jre": ["Apache 2.0"]
+            },
+            "listenablefuture": {
+                "9999.0-empty-to-avoid-conflict-with-guava": ["Apache 2.0"]
+            }
+        },
+        "com.google.code.gson": {
+            "gson": {
+                "2.8.7": ["Apache 2.0"]
+            }
+        },
+        "com.google.inject": {
+            "guice": {
+                "4.1.0": ["Apache 2.0"]
+            }
+        },
+        "org.hibernate.validator": {
+            "hibernate-validator": {
+                "6.1.7.Final": ["Apache 2.0"]
+            }
+        },
+        "org.apache.httpcomponents": {
+            "httpclient": {
+                "4.5.13": ["Apache 2.0"]
+            },
+            "httpcore": {
+                "4.4.14": ["Apache 2.0"]
+            }
+        },
+        "com.fasterxml.jackson.dataformat": {
+            "jackson-dataformat-yaml": {
+                "2.11.4": ["Apache 2.0"]
+            }
+        },
+        "com.fasterxml.jackson.datatype": {
+            "jackson-datatype-jdk8": {
+                "2.11.4": ["Apache 2.0"]
+            },
+            "jackson-datatype-jsr310": {
+                "2.11.4": ["Apache 2.0"]
+            }
+        },
+        "com.fasterxml.jackson.module": {
+            "jackson-module-parameter-names": {
+                "2.11.4": ["Apache 2.0"]
+            }
+        },
+        "jakarta.activation": {
+            "jakarta.activation-api": {
+                "1.2.2": ["EDL 1.0"]
+            }
+        },
+        "jakarta.xml.bind": {
+            "jakarta.xml.bind-api": {
+                "2.3.3": ["EDL 1.0"]
+            }
+        },
+        "com.sun.jersey.contribs": {
+            "jersey-apache-client4": {
+                "1.19.1": ["CDDL 1.1", "GPL 1.1"]
+            }
+        },
+        "com.sun.jersey": {
+            "jersey-client": {
+                "1.19.1": ["CDDL 1.1", "GPL 1.1"]
+            },
+            "jersey-core": {
+                "1.19.1": ["CDDL 1.1", "GPL 1.1"]
+            }
+        },
+        "org.slf4j": {
+            "jul-to-slf4j": {
+                "1.7.30": ["MIT"]
+            },
+            "slf4j-api": {
+                "1.7.30": ["MIT"]
+            }
+        },
+        "org.apache.logging.log4j": {
+            "log4j-api": {
+                "2.13.3": ["Apache 2.0"]
+            },
+            "log4j-to-slf4j": {
+                "2.13.3": ["Apache 2.0"]
+            }
+        },
+        "ch.qos.logback": {
+            "logback-classic": {
+                "1.2.3": ["EPL 1.0", "LGPL 2.1"]
+            },
+            "logback-core": {
+                "1.2.3": ["EPL 1.0", "LGPL 2.1"]
+            }
+        },
+        "io.netty": {
+            "netty-buffer": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-codec": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-codec-http": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-codec-http2": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-codec-socks": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-common": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-handler": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-handler-proxy": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-resolver": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-transport": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-transport-native-epoll": {
+                "4.1.65.Final": ["Apache 2.0"]
+            },
+            "netty-transport-native-unix-common": {
+                "4.1.65.Final": ["Apache 2.0"]
+            }
+        },
+        "org.synchronoss.cloud": {
+            "nio-multipart-parser": {
+                "1.1.0": ["Apache 2.0"]
+            }
+        },
+        "org.objenesis": {
+            "objenesis": {
+                "2.6": ["Apache 2.0"]
+            }
+        },
+        "org.springframework.cloud": {
+            "spring-cloud-sleuth-core": {
+                "2.2.8.RELEASE": ["Apache 2.0"]
+            },
+            "spring-cloud-starter-sleuth": {
+                "2.2.8.RELEASE": ["Apache 2.0"]
+            }
+        },
+        "org.xmlunit": {
+            "xmlunit-core": {
+                "2.7.0": ["Apache 2.0"]
+            }
+        },
+        "com.thoughtworks.xstream": {
+            "xstream": {
+                "1.4.16": ["BSD 3-clause"]
+            }
+        },
+        "io.zipkin.zipkin2": {
+            "zipkin": {
+                "2.21.7": ["Apache 2.0"]
+            }
+        },
+        "io.zipkin.reporter2": {
+            "zipkin-reporter": {
+                "2.15.2": ["Apache 2.0"]
+            },
+            "zipkin-reporter-brave": {
+                "2.15.2": ["Apache 2.0"]
+            },
+            "zipkin-reporter-metrics-micrometer": {
+                "2.15.2": ["Apache 2.0"]
+            }
+        },
+        "org.codehaus.woodstox": {
+            "stax2-api": {
+                "4.2.1": ["BSD 2-Clause"]
+            }
+        }
+    }
+}

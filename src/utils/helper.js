@@ -9,6 +9,7 @@ const http = require('http');
 const eol = '\n';
 
 exports.licenseMappings = Object.entries(require('./license-mappings.json'));
+exports.licenseFallbacks = require('./license-fallbacks.json');
 
 exports.log = (...args) => console.log(...args.map(arg => util.inspect(arg, { showHidden: false, depth: null, colors: true })));
 
