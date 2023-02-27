@@ -9,7 +9,7 @@ import { join } from 'path';
 import { EOL } from 'os';
 
 let currentTimer: NodeJS.Timeout;
-const timeout = 2000;
+const timeout = 10000;
 
 export const licenseMappings = Object.entries(parse(readFileSync(join(__dirname, 'license-mappings.json'), { encoding: 'utf-8' })));
 export const licenseFallbacks = parse(readFileSync(join(__dirname, 'license-fallbacks.json'), { encoding: 'utf-8' }));

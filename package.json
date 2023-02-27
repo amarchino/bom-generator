@@ -7,7 +7,7 @@
     "node": ">=14.0.0"
   },
   "scripts": {
-    "check": "node src/check.js",
+    "check": "ts-node src/check.ts",
     "grab": "ts-node src/grab-files.ts",
     "run": "ts-node src/run.ts",
     "put": "ts-node src/put.ts",
@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "@types/jsdom": "^16.2.13",
-    "@types/json5": "^2.2.0",
     "@types/node": "^16.11.11",
     "@types/papaparse": "^5.3.1"
   }

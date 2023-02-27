@@ -95,16 +95,20 @@ async function populateVersionData(bom) {
 }
 
 async function readPackageMetadata(baseUrl, version) {
-  let content = await httpRequest(`${baseUrl}/${version}`);
-  if (content && content.length) {
-    return parseMetadata(JSON.parse(content));
+  try {
+    let content = await httpRequest(`${baseUrl}/${version}`);
+    if (content && content.length) {
+      return parseMetadata(JSON.parse(content));
+    }
+    // Fallback
+    content = await httpRequest(baseUrl);
+    const metadata = JSON.parse(content);
+    const datum = Object.entries(metadata.versions || {})
+      .find(el => el[0] === version);
+    return parseMetadata(datum?.[1]);
+  } catch(e) {
+    return { license: [], dependencies: [] };
   }
-  // Fallback
-  content = await httpRequest(baseUrl);
-  const metadata = JSON.parse(content);
-  const datum = Object.entries(metadata.versions || {})
-    .find(el => el[0] === version);
-  return parseMetadata(datum?.[1]);
 }
 
 function parseMetadata(metadata) {

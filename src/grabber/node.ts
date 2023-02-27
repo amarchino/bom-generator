@@ -13,6 +13,7 @@ export function grab (projectName: string, projectPath: string): void {
 
 function copyFile(projectName: string, folder: string, fileName: string): void {
   if(!existsSync(join(folder, fileName))) {
+    console.log(chalk.redBright(`Expected file ${fileName} not found in folder ${folder}`));
     return;
   }
   copyFileSync(join(folder, fileName), join(basePath, 'input', 'node', projectName, fileName));
